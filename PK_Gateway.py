@@ -8,7 +8,6 @@ Copyright 2020 Amadea System
 """
 import logging
 import json
-import time
 
 from flask import Flask
 
@@ -21,13 +20,13 @@ app = Flask(__name__)
 
 with open('config.json') as conf_file:
     config = json.load(conf_file)
-    # system_id = config['system_id']
-    # pk_token = config['pk_token']
-    system_id = config['system_id_debug']
-    pk_token = config['pk_token_debug']
+    system_id = config['system_id']
+    pk_token = config['pk_token']
+    # system_id_debug = config['system_id_debug']
+    # pk_token_debug = config['pk_token_debug']
 
 amadea_system = pk.System.get_by_hid(system_id, pk_token)
-amadea_system._fronter_decay_time = 45
+amadea_system._fronter_decay_time = config['fronter_decay_time']
 
 
 @app.route('/')
@@ -59,16 +58,6 @@ def get_cached_fronters():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
-
-    with open('config.json') as conf_file:
-        config = json.load(conf_file)
-        # system_id = config['system_id_debug']
-        # pk_token = config['pk_token_debug']
-        system_id = config['system_id']
-        pk_token = config['pk_token']
-
-    amadea_system = pk.System.get_by_hid(system_id, pk_token)
-
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)
     # app.run(host="0.0.0.0", port=8080, debug=True)
 
